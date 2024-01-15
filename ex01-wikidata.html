@@ -8,23 +8,53 @@
 <body>
     <h1>Exercice no. 01</h1>
     <h2>Ligne de temps faite avec Wikidata</h2>
-    <p>Cette <em>timeline</em> montre des écrivains dont la langue maternelle est le français.</p>
+    <p>Cette <em>timeline</em> montre des paintres dont la langue maternelle est le français.</p>
     <p>La requête est :</p>
     <p>
         <code>
-            #defaultView:Timeline
-            SELECT ?painter ?painterLabel ?date_of_birth ?place_of_birth ?place_of_birthLabel ?image ?coordinate_location WHERE {
-              SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-              ?painter wdt:P106 wd:Q36180;
-                wdt:P103 wd:Q150.
-              OPTIONAL { ?painter wdt:P569 ?date_of_birth. }
-              OPTIONAL { ?painter wdt:P19 ?place_of_birth. }
-              ?painter wdt:P18 ?image.
-            }
-            LIMIT 100
+            <pre>
+                #defaultView:Timeline
+                SELECT ?painter ?painterLabel ?date_of_birth ?place_of_birth ?place_of_birthLabel ?image ?coordinate_location WHERE {
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+                ?painter wdt:P106 wd:Q36180;
+                    wdt:P103 wd:Q150.
+                OPTIONAL { ?painter wdt:P569 ?date_of_birth. }
+                OPTIONAL { ?painter wdt:P19 ?place_of_birth. }
+                ?painter wdt:P18 ?image.
+                }
+                LIMIT 100
+            </pre>
         </code>
     </p>
     <iframe style="width: 80vw; height: 50vh; border: none;" src="https://query.wikidata.org/embed.html#%23defaultView%3ATimeline%0ASELECT%20%3Fpainter%20%3FpainterLabel%20%3Fdate_of_birth%20%3Fplace_of_birth%20%3Fplace_of_birthLabel%20%3Fimage%20%3Fcoordinate_location%20WHERE%20%7B%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%20%20%3Fpainter%20wdt%3AP106%20wd%3AQ36180%3B%0A%20%20%20%20wdt%3AP103%20wd%3AQ150.%0A%20%20OPTIONAL%20%7B%20%3Fpainter%20wdt%3AP569%20%3Fdate_of_birth.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fpainter%20wdt%3AP19%20%3Fplace_of_birth.%20%7D%0A%20%20%3Fpainter%20wdt%3AP18%20%3Fimage.%0A%7D%0ALIMIT%20100" referrerpolicy="origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+
+    <hr>
+
+    <h2>Circle packing fait avec RAWGraphs</h2>
+
+    <p>Cette représentatio</p>
+
+    <div>
+        <a href="population_femme.svg"><img src="population_femme.svg" alt="Circle Packing" width="500"></a>
+    </div>
+
+    <p>Code de la requête en SPARQL Wikidata :</p>
+    <p>
+        <code>
+            <pre>
+                SELECT ?city ?cityLabel ?continent ?continentLabel ?female_population ?coordinate_location WHERE {
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+                    ?city wdt:P31 wd:Q515;
+                      wdt:P30 ?continent;
+                      wdt:P1539 ?female_population.
+                    OPTIONAL { ?city wdt:P625 ?coordinate_location. }
+                  }
+                  LIMIT 100
+            </pre>
+        </code>
+    </p>
+
+    <p>Lien de la requête : <a href="https://w.wiki/8qzm">https://w.wiki/8qzm</a></p>
 
 </body>
 </html>
