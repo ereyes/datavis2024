@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB to Hex and HSL Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #dropZone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        #credit {
+            text-align: left;
+            position: fixed;
+            bottom: 0px;
+            font-size: 90%;
+            margin-bottom: 1%;
+        }
+    </style>
+</head>
+<body>
+    <h1>RGB to Hex and HSL Converter</h1>
+
+    <div id="dropZone" ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)">
+        <p>Drag and drop a CSV file here, or click to select one.</p>
+        <p>It implies your values are between quotes. This is how Google Sheets exports a column of values rgb like: "139,132,133".</p>
+        <p>Not sure? See an sample file: <a href="rgbcolors.csv">rgbcolors.csv</a></p>
+        <input type="file" id="fileInput" style="display: none;" accept=".csv" onchange="handleFileSelect(event)">
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        function handleFileDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        function handleFileSelect(event) {
+            var files = event.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var csvContent = e.target.result;
+                var rgbValues = csvContent.split('\n').map(function (rgbValue) {
+                    return rgbValue.replace(/"/g, '').trim(); // Remove quotes
+                });
+                convertRgbToHexAndHsl(rgbValues);
+            };
+            reader.readAsText(files[0]);
+        }
+
+        function convertRgbToHexAndHsl(rgbValues) {
+            var resultHTML = "<p>Conversion Results:</p>";
+
+            rgbValues.forEach(function (rgbValue) {
+                // Skip empty lines
+                if (rgbValue.length === 0) {
+                    return;
+                }
+
+                var rgbComponents = rgbValue.split(',').map(function (component) {
+                    return parseInt(component.trim(), 10);
+                });
+
+                // Check if all components are valid numbers
+                if (rgbComponents.length === 3 && rgbComponents.every(Number.isInteger)) {
+                    var hex = rgbToHex(rgbComponents[0], rgbComponents[1], rgbComponents[2]);
+                    var hsl = rgbToHsl(rgbComponents[0], rgbComponents[1], rgbComponents[2]);
+
+                    resultHTML += `<p>RGB: (${rgbComponents[0]}, ${rgbComponents[1]}, ${rgbComponents[2]}) | Hex: ${hex} | HSL: (${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)</p>`;
+                } else {
+                    console.log("Invalid RGB format:", rgbValue);
+                    resultHTML += `<p>Invalid RGB format: ${rgbValue}</p>`;
+                }
+            });
+
+            document.getElementById("result").innerHTML = resultHTML;
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            var max = Math.max(r, g, b);
+            var min = Math.min(r, g, b);
+            var h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; // grayscale
+            } else {
+                var d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r:
+                        h = (g - b) / d + (g < b ? 6 : 0);
+                        break;
+                    case g:
+                        h = (b - r) / d + 2;
+                        break;
+                    case b:
+                        h = (r - g) / d + 4;
+                        break;
+                }
+                h /= 6;
+            }
+
+            return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+        }
+    </script>
+    <div id="credit">
+        Atelier datavis, Univ. Paris 8. <br>
+        v01. Jan. 2024
+    </div>
+</body>
+</html>
