@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex to RGB Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f1f1f1;
+        }
+
+        #dropZone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        #credit {
+            text-align: left;
+            position: fixed;
+            bottom: 0px;
+            font-size: 90%;
+            margin-bottom: 1%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hex to RGB Converter</h1>
+
+    <div id="dropZone" ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)">
+        <p>Drag and drop a CSV file here, or click to select one.</p>
+        <p><strong>Important</strong>. <br>Your CSV must contain only one column. All colors must have the "#" symbol, e.g. "#FF0000".</p>
+        <p>Check this file for an example: <a href="hexcolors.csv">hexcolors.csv</a></p>
+        <input type="file" id="fileInput" style="display: none;" accept=".csv" onchange="handleFileSelect(event)">
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        function handleFileDrop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        function handleFileSelect(event) {
+            var files = event.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var csvContent = e.target.result;
+                var hexCodes = csvContent.split('\n').map(function (hex) {
+                    return hex.trim();
+                });
+                convertHexToRgb(hexCodes);
+            };
+            reader.readAsText(files[0]);
+        }
+
+        function convertHexToRgb(hexCodes) {
+            var rgbResult = hexCodes.map(function(hex) {
+                hex = hex.trim();
+                var bigint = parseInt(hex.slice(1), 16);
+                var r = (bigint >> 16) & 255;
+                var g = (bigint >> 8) & 255;
+                var b = bigint & 255;
+                return `rgb(${r}, ${g}, ${b})`;
+            });
+
+            document.getElementById("result").innerHTML = "<p>RGB format:</p><p>" + rgbResult.join("<br>") + "</p>";
+        }
+    </script>
+    <div id="credit">
+        Atelier datavis, Univ. Paris 8. <br>
+        v01. Jan. 2024
+    </div>
+</body>
+</html>

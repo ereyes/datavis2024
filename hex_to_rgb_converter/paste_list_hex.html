@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex to RGB Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+        #code {
+            background-color: azure;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 85%;
+        }
+        #credit {
+            text-align: left;
+            position: fixed;
+            bottom: 0px;
+            font-size: 90%;
+            margin-bottom: 1%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hex to RGB Converter</h1>
+    <p>Paste your list of hexadecimal codes (separated by commas).</p>
+    <p>Not sure? Here's an example:</p>
+    <p id="code">#3498db, #e74c3c, #2ecc71, #f39c12, #1abc9c, #9b59b6, #e67e22, #34495e, #c0392b, #7f8c8d</p>
+    <textarea id="hexInput" rows="4" cols="50"></textarea>
+    <br>
+    <button onclick="convertHexToRgb()">Convert</button>
+    <div id="result"></div>
+
+    <script>
+        function convertHexToRgb() {
+            var hexInput = document.getElementById("hexInput").value;
+            var hexCodes = hexInput.split(',');
+
+            var rgbResult = hexCodes.map(function(hex) {
+                hex = hex.trim();
+                var bigint = parseInt(hex.slice(1), 16);
+                var r = (bigint >> 16) & 255;
+                var g = (bigint >> 8) & 255;
+                var b = bigint & 255;
+                return `rgb(${r}, ${g}, ${b})`;
+            });
+
+            document.getElementById("result").innerHTML = "<p>RGB format:</p><p>" + rgbResult.join("<br>") + "</p>";
+        }
+    </script>
+    <div id="credit">
+        Atelier datavis, Univ. Paris 8. <br>
+        v01. Jan. 2024
+    </div>
+</body>
+</html>
