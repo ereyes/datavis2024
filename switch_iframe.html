@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $('document').ready(function(){
+            var gauche = $('#elem1').attr('src');
+            var droite = $('#elem2').attr('src');
+            
+            $('button').click(function(){
+
+                if($('#elem1').attr('src') == 'https://www.wikidata.org/wiki/Wikidata:Main_Page'){
+                    $('#elem1').attr('src', 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal');
+                } else {
+                    $('#elem1').attr('src', 'https://www.wikidata.org/wiki/Wikidata:Main_Page')
+                }
+
+                if($('#elem2').attr('src') == 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal'){
+                    $('#elem2').attr('src', 'https://www.wikidata.org/wiki/Wikidata:Main_Page');
+                } else {
+                    $('#elem2').attr('src', 'https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal')
+                }
+                
+            });
+
+            
+        });
+    </script>
+</head>
+<body>
+    <button>changer l'iframe</button>
+    <br>
+    <iframe id="elem1" src="https://www.wikidata.org/wiki/Wikidata:Main_Page" frameborder="0" width="300"></iframe>
+    <iframe id="elem2" src="https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal" frameborder="0" width="300"></iframe>
+</body>
+</html>
